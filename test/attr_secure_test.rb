@@ -3,7 +3,7 @@ require 'minitest/mock'
 require 'attr_secure'
 
 class FakeModelWithSecureAttributes
-  include AttrSecure
+  extend AttrSecure
   attr_accessor :attributes
 
   attr_secure :foo
