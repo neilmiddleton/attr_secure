@@ -1,4 +1,4 @@
-# AttrSecure
+# attr_secure
 
 Securely stores ActiveRecord attributes for a given model/attribute and a predefined secret.
 
