@@ -28,7 +28,7 @@ module AttrSecure
 
     def attr_secure(attribute)
       define_method("#{attribute}=") do |value|
-        write_attribute(attribute, encrypt(value.to_sym))
+        write_attribute(attribute, encrypt(value.nil? ? nil : value.to_sym))
       end
 
       define_method("#{attribute}") do
