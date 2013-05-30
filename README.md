@@ -3,7 +3,6 @@
 Securely stores ActiveRecord attributes for a given model/attribute and a predefined secret.
 
 ```
-
 ENV["ATTR_SECURE_SECRET"] = "MySuperSecretKeyThatCannotBeGuessed"
 
 class Report < ActiveRecord::Base
