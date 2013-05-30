@@ -1,5 +1,6 @@
 require "attr_secure/version"
 require 'fernet'
+require 'active_record'
 
 Fernet::Configuration.run do |config|
   config.enforce_ttl = false
