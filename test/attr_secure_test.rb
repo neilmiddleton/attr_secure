@@ -21,7 +21,7 @@ class FakeModelWithSecureAttributes
   end
 end
 
-class TestAttrSecure < MiniTest::Test
+class TestAttrSecure < MiniTest::Unit::TestCase
   def setup
     @subject = FakeModelWithSecureAttributes.new
     ENV['ATTR_SECURE_SECRET'] = 'xxx'
