@@ -3,14 +3,14 @@ module AttrSecure
 
     def encrypt(value)
       Fernet.generate(attr_secure_secret) do |generator|
-        generator.message = value
+        generator.data = { value: value }
       end
     end
 
     def decrypt(value)
       return nil if value.nil?
       verifier = Fernet.verifier(attr_secure_secret, value)
-      verifier.message if verifier.valid?
+      verifier.data["value"] if verifier.valid?
     end
 
     private
