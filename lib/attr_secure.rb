@@ -19,6 +19,7 @@ module AttrSecure
       Secure.new.decrypt read_attribute(attribute.to_sym)
     end
   end
+
 end
 
 ActiveRecord::Base.send(:extend, AttrSecure)
