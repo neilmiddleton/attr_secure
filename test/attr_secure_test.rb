@@ -42,7 +42,7 @@ class TestAttrSecure < MiniTest::Unit::TestCase
   def test_decrypt
     decrypter_mock = MiniTest::Mock.new
     decrypter_mock.expect(:valid?, true)
-    decrypter_mock.expect(:data, {'value' => 'world'})
+    decrypter_mock.expect(:message, 'world')
 
     Fernet.stub(:generate, 'world') do
       Fernet.stub(:verifier, decrypter_mock) do
