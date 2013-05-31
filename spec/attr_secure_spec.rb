@@ -1,6 +1,4 @@
-require 'minitest/autorun'
-require 'minitest/mock'
-require 'attr_secure'
+require 'spec_helper'
 
 class FakeModelWithSecureAttributes
   extend AttrSecure
@@ -21,36 +19,34 @@ class FakeModelWithSecureAttributes
   end
 end
 
-class TestAttrSecure < MiniTest::Unit::TestCase
-  def setup
-    @subject = FakeModelWithSecureAttributes.new
-    ENV['ATTR_SECURE_SECRET'] = 'xxx'
-  end
 
-  def test_encrypt
+ENV['ATTR_SECURE_SECRET'] = 'xxx'
+
+describe AttrSecure do
+  subject { FakeModelWithSecureAttributes.new }
+
+  it 'encrypts' do
     encrypter = lambda { |secret|
       assert_equal 'xxx', secret
       'world'
     }
 
     Fernet.stub :generate, encrypter do |f|
-      @subject.foo = 'hello'
-      assert_equal 'world', @subject.attributes[:foo]
+      subject.foo = 'hello'
+      expect(subject.attributes[:foo]).to eq('world')
     end
   end
 
-  def test_decrypt
-    decrypter_mock = MiniTest::Mock.new
-    decrypter_mock.expect(:valid?, true)
-    decrypter_mock.expect(:data, {'value' => 'world'})
+  it 'decrypts' do
+    decrypter_mock = double(Object)
+    decrypter_mock.stub(:valid?) { true }
+    decrypter_mock.stub(:data) { {'value' => 'world'} }
 
     Fernet.stub(:generate, 'world') do
       Fernet.stub(:verifier, decrypter_mock) do
-        @subject.foo = 'hello'
-        assert_equal 'world', @subject.foo
+        subject.foo = 'hello'
+        expect(subject.foo).to eq('world')
       end
     end
-
-    decrypter_mock.verify
   end
 end

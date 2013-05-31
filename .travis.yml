@@ -8,4 +8,4 @@ matrix:
   allow_failures:
     - rvm: jruby-19mode
 
-script: rake test
+script: rspec spec
