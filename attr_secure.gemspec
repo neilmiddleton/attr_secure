@@ -20,7 +20,8 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "rake"
+  spec.add_development_dependency "activerecord"
+  spec.add_development_dependency "sqlite3"
 
   spec.add_dependency 'fernet'
-  spec.add_dependency 'activerecord',  ' ~> 3.2.0'
 end
