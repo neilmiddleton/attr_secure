@@ -3,6 +3,7 @@ require 'fernet'
 
 require 'attr_secure/adapters/ruby'
 require 'attr_secure/adapters/active_record'
+require 'attr_secure/adapters/sequel'
 
 Fernet::Configuration.run do |config|
   config.enforce_ttl = false
@@ -15,6 +16,7 @@ module AttrSecure
   #
   ADAPTERS = [
     AttrSecure::Adapters::ActiveRecord,
+    AttrSecure::Adapters::Sequel,
     AttrSecure::Adapters::Ruby
   ]
 
