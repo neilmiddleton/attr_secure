@@ -1,5 +1,10 @@
 module AttrSecure
   class Secure
+    attr_reader :env
+
+    def initialize(env=ENV)
+      @env = env
+    end
 
     def encrypt(value)
       Fernet.generate(attr_secure_secret) do |generator|
@@ -10,12 +15,12 @@ module AttrSecure
     def decrypt(value)
       return nil if value.nil?
       verifier = Fernet.verifier(attr_secure_secret, value)
-      verifier.data["value"] if verifier.valid?
+      verifier.data['value'] if verifier.valid?
     end
 
     private
     def env!(key)
-      ENV.fetch(key) { raise("Missing ENV(#{key})") }
+      env.fetch(key) { raise("Missing ENV(#{key})") }
     end
 
     def attr_secure_secret
