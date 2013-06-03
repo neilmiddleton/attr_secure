@@ -11,7 +11,7 @@ describe AttrSecure::Adapters::ActiveRecord do
     described.attr_secure :title, secure_mock
   end
 
-  it 'has ruby as it\'s adapter' do
+  it 'has active record as it\'s adapter' do
     expect(described.attr_secure_adapter).to eq(AttrSecure::Adapters::ActiveRecord)
   end
 
