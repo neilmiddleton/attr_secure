@@ -9,7 +9,6 @@ describe AttrSecure::Adapters::Sequel do
     described.set_dataset(:fake_database)
     described.extend(AttrSecure)
     described.attr_secure :title, secure_mock
-    raise described.inspect
   end
 
   it 'has sequel as it\'s adapter' do

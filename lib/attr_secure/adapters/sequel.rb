@@ -9,11 +9,11 @@ module AttrSecure
       end
 
       def self.write_attribute(object, attribute, value)
-        object.instance_variable_set "@#{attribute}", value
+        object[attribute] = value
       end
 
       def self.read_attribute(object, attribute)
-        object.instance_variable_get "@#{attribute}"
+        object[attribute]
       end
     end
   end
