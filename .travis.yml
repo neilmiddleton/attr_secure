@@ -7,5 +7,3 @@ rvm:
 matrix:
   allow_failures:
     - rvm: jruby-19mode
-
-script: rspec spec
