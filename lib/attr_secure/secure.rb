@@ -1,6 +1,7 @@
 module AttrSecure
   class Secure
-    attr_reader :env
+    attr_reader   :env
+    attr_accessor :object
 
     def initialize(env=ENV)
       @env = env
@@ -25,7 +26,11 @@ module AttrSecure
     end
 
     def attr_secure_secret(secret)
-      secret || env!('ATTR_SECURE_SECRET')
+      if secret.respond_to?(:call)
+        secret.call(object)
+      else
+        secret || env!('ATTR_SECURE_SECRET')
+      end
     end
   end
 end

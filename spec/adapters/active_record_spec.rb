@@ -9,6 +9,7 @@ describe AttrSecure::Adapters::ActiveRecord do
     described.table_name = 'fake_database'
     described.extend(AttrSecure)
     described.attr_secure :title, :encryption_class => secure_mock
+    secure_mock.stub(:object=)
   end
 
   it 'has active record as it\'s adapter' do
@@ -16,15 +17,15 @@ describe AttrSecure::Adapters::ActiveRecord do
   end
 
   it 'encrypts' do
-    secure_mock.should_receive(:encrypt).with('hello').and_return('encrypted')
+    secure_mock.should_receive(:encrypt).with('hello', nil).and_return('encrypted')
     subject.title = 'hello'
     expect(subject.attributes['title']).to eq('encrypted')
   end
 
   it 'decrypts' do
-    secure_mock.should_receive(:encrypt).with('hello').and_return('encrypted')
+    secure_mock.should_receive(:encrypt).with('hello', nil).and_return('encrypted')
     subject.title = 'hello'
-    secure_mock.should_receive(:decrypt).with('encrypted').and_return('decrypted')
+    secure_mock.should_receive(:decrypt).with('encrypted', nil).and_return('decrypted')
     expect(subject.title).to eq('decrypted')
   end
 end

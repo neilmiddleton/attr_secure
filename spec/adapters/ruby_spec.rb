@@ -9,6 +9,7 @@ describe AttrSecure::Adapters::Ruby do
   before do
     described.extend(AttrSecure)
     described.attr_secure :foo, :encryption_class => secure_mock
+    secure_mock.stub(:object=)
   end
 
   it 'has ruby as it\'s adapter' do
@@ -16,15 +17,15 @@ describe AttrSecure::Adapters::Ruby do
   end
 
   it 'encrypts' do
-    secure_mock.should_receive(:encrypt).with('hello').and_return('encrypted')
+    secure_mock.should_receive(:encrypt).with('hello', nil).and_return('encrypted')
     subject.foo = 'hello'
     expect(subject.instance_variable_get(:@foo)).to eq('encrypted')
   end
 
   it 'decrypts' do
-    secure_mock.should_receive(:encrypt).with('hello').and_return('encrypted')
+    secure_mock.should_receive(:encrypt).with('hello', nil).and_return('encrypted')
     subject.foo = 'hello'
-    secure_mock.should_receive(:decrypt).with('encrypted').and_return('decrypted')
+    secure_mock.should_receive(:decrypt).with('encrypted', nil).and_return('decrypted')
     expect(subject.foo).to eq('decrypted')
   end
 

@@ -29,21 +29,15 @@ module AttrSecure
     attribute = attributes.first
 
     define_method("#{attribute}=") do |value|
-      if options[:secret]
-        encrypted_value = options[:encryption_class].encrypt(value.nil? ? nil : value, options[:secret])
-      else
-        encrypted_value = options[:encryption_class].encrypt(value.nil? ? nil : value)
-      end
+      options[:encryption_class].object = self
+      encrypted_value = options[:encryption_class].encrypt(value.nil? ? nil : value, options[:secret])
       self.class.attr_secure_adapter.write_attribute self, attribute, encrypted_value
     end
 
     define_method("#{attribute}") do
+      options[:encryption_class].object = self
       encrypted_value = self.class.attr_secure_adapter.read_attribute(self, attribute)
-      if options[:secret]
-        options[:encryption_class].decrypt encrypted_value, options[:secret]
-      else
-        options[:encryption_class].decrypt encrypted_value
-      end
+      options[:encryption_class].decrypt encrypted_value, options[:secret]
     end
   end
 
