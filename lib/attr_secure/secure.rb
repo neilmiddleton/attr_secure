@@ -6,25 +6,26 @@ module AttrSecure
       @env = env
     end
 
-    def encrypt(value)
-      Fernet.generate(attr_secure_secret) do |generator|
+    def encrypt(value, secret=nil)
+      Fernet.generate(attr_secure_secret(secret)) do |generator|
         generator.data = { value: value }
       end
     end
 
-    def decrypt(value)
+    def decrypt(value, secret=nil)
       return nil if value.nil?
-      verifier = Fernet.verifier(attr_secure_secret, value)
+      verifier = Fernet.verifier(attr_secure_secret(secret), value)
       verifier.data['value'] if verifier.valid?
     end
 
     private
+
     def env!(key)
       env.fetch(key) { raise("Missing ENV(#{key})") }
     end
 
-    def attr_secure_secret
-      env!('ATTR_SECURE_SECRET')
+    def attr_secure_secret(secret)
+      secret || env!('ATTR_SECURE_SECRET')
     end
   end
 end

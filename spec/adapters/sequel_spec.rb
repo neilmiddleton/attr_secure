@@ -8,7 +8,7 @@ describe AttrSecure::Adapters::Sequel do
   before do
     described.set_dataset(:fake_database)
     described.extend(AttrSecure)
-    described.attr_secure :title, secure_mock
+    described.attr_secure :title, :encryption_class => secure_mock
   end
 
   it 'has sequel as it\'s adapter' do

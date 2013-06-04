@@ -20,19 +20,35 @@ module AttrSecure
     AttrSecure::Adapters::Ruby
   ]
 
-  def attr_secure(attribute, encryption_class = Secure.new)
+  # Generates attr_accessors that encrypt and decrypt attributes transparently
+  def attr_secure(*attributes)
+    options = {
+      :encryption_class => Secure.new
+    }.merge!(attributes.last.is_a?(Hash) ? attributes.pop : {})
+
+    attribute = attributes.first
+
     define_method("#{attribute}=") do |value|
-      encrypted_value = encryption_class.encrypt(value.nil? ? nil : value)
+      if options[:secret]
+        encrypted_value = options[:encryption_class].encrypt(value.nil? ? nil : value, options[:secret])
+      else
+        encrypted_value = options[:encryption_class].encrypt(value.nil? ? nil : value)
+      end
       self.class.attr_secure_adapter.write_attribute self, attribute, encrypted_value
     end
 
     define_method("#{attribute}") do
       encrypted_value = self.class.attr_secure_adapter.read_attribute(self, attribute)
-      encryption_class.decrypt encrypted_value
+      if options[:secret]
+        options[:encryption_class].decrypt encrypted_value, options[:secret]
+      else
+        options[:encryption_class].decrypt encrypted_value
+      end
     end
   end
 
   def attr_secure_adapter
     ADAPTERS.find {|a| a.valid?(self) }
   end
+
 end

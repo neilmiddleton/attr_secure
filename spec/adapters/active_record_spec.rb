@@ -8,7 +8,7 @@ describe AttrSecure::Adapters::ActiveRecord do
   before do
     described.table_name = 'fake_database'
     described.extend(AttrSecure)
-    described.attr_secure :title, secure_mock
+    described.attr_secure :title, :encryption_class => secure_mock
   end
 
   it 'has active record as it\'s adapter' do
