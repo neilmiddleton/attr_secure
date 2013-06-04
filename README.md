@@ -2,7 +2,8 @@
 
 [![Build Status](https://travis-ci.org/neilmiddleton/attr_secure.png?branch=master)](https://travis-ci.org/neilmiddleton/attr_secure)
 
-Securely stores ActiveRecord attributes for a given model/attribute and a predefined secret.
+Securely stores attribute values for your Ruby objects.  Also supports Active
+Record and Sequel!
 
 ```
 ENV["ATTR_SECURE_SECRET"] = "MySuperSecretKeyThatCannotBeGuessed"
