@@ -15,8 +15,8 @@ module AttrSecure
   # The order in this list matters, as only the first valid adapter will be used
   #
   ADAPTERS = [
-    AttrSecure::Adapters::Sequel,
     AttrSecure::Adapters::ActiveRecord,
+    AttrSecure::Adapters::Sequel,
     AttrSecure::Adapters::Ruby
   ]
 
