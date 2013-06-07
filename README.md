@@ -38,26 +38,22 @@ Or install it yourself as:
 
 ## Usage
 
-To make an model attribute secure, first create a key:
+To make an model attribute secure, first you need a secure key:
 
     dd if=/dev/urandom bs=32 count=1 2>/dev/null | openssl base64
 
-and add it to your environment as `ATTR_SECURE_SECRET`.
-Then mark an attribute as secure:
+There's a number of ways of setting a key for a given attribute.  The easiest is to default the key via the environment.  
+Setting the environment variable `ATTR_SECURE_SECRET` to a secret value will secure all attributes with the same key.
 
-    attr_secure :my_attribute
-
-and read and write as normal (see above example)
-
-Alternatively you can set the secret on a per attribute basis:
+Alternatively, if you want to use different keys for different attributes you can do this too:
 
     attr_secure :my_attribute, :secret => "EKq88AMFeRLqEx5knUcoJ4LOnrv52d7hfAFgEKMoDKzqNei4m7kbu"
+    
+If you would like your key dependent on something else, a lambda is OK too:
 
-And with a lambda :
-
-    attr_secure :my_attribute, :secret => lambda {|object| object.user.secret }
-
-It is a good idea to not hard code secrets ;)
+    attr_secure :my_attribute, :secret => lambda {|record| record.user.secret }
+    
+Remember kids, it's not a good idea to hard-code secrets.
 
 Note: You will want to set your table columns for encrypted values to :text or
 similar.  Encrypted values are long.
