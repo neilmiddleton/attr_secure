@@ -1,45 +1,25 @@
 require 'spec_helper'
 
 describe AttrSecure::Adapters::Ruby do
+  subject { Class.new }
 
-  let(:described)   { Class.new }
-  subject           { described.new }
-  let(:secure_mock) { double(AttrSecure::Secure) }
-
-  before do
-    described.extend(AttrSecure)
-    described.attr_secure :foo, :encryption_class => secure_mock
-    secure_mock.stub(:object=)
-  end
-
-  it 'has ruby as it\'s adapter' do
-    expect(described.attr_secure_adapter).to eq(AttrSecure::Adapters::Ruby)
-  end
-
-  it 'encrypts' do
-    secure_mock.should_receive(:encrypt).with('hello', nil).and_return('encrypted')
-    subject.foo = 'hello'
-    expect(subject.instance_variable_get(:@foo)).to eq('encrypted')
-  end
-
-  it 'decrypts' do
-    secure_mock.should_receive(:encrypt).with('hello', nil).and_return('encrypted')
-    subject.foo = 'hello'
-    secure_mock.should_receive(:decrypt).with('encrypted', nil).and_return('decrypted')
-    expect(subject.foo).to eq('decrypted')
-  end
-
-  context 'with explicit secret' do
-    before do
-      described.extend(AttrSecure)
-      described.attr_secure :foo, :secret => 'sekrit', :encryption_class => secure_mock
+  describe "valid?" do
+    it "should be valid all the time" do
+      expect(described_class.valid?(String)).to be_true
     end
+  end
 
-    it 'uses the defined secret' do
-      secure_mock.should_receive(:encrypt).with('hello', 'sekrit').and_return('encrypted')
-      subject.foo = 'hello'
-      secure_mock.should_receive(:decrypt).with('encrypted', 'sekrit').and_return('decrypted')
-      expect(subject.foo).to eq('decrypted')
+  describe "write attribute" do
+    it "should set the instance variable" do
+      described_class.write_attribute(subject, 'secure', 'hello')
+      expect(subject.instance_variable_get("@secure")).to eql('hello')
+    end
+  end
+
+  describe "read attribute" do
+    it "should read an instance variable" do
+      subject.instance_variable_set("@secure", 'world')
+      expect(described_class.read_attribute(subject, 'secure')).to eq('world')
     end
   end
 end
