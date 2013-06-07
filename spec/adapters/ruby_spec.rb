@@ -1,29 +1,25 @@
 require 'spec_helper'
 
 describe AttrSecure::Adapters::Ruby do
-  let(:described)   { Class.new }
-  subject           { described.new }
-  let(:secure_mock) { double(AttrSecure::Secure) }
+  subject { Class.new }
 
-  before do
-    described.extend(AttrSecure)
-    described.attr_secure :foo, secure_mock
+  describe "valid?" do
+    it "should be valid all the time" do
+      expect(described_class.valid?(String)).to be_true
+    end
   end
 
-  it 'has ruby as it\'s adapter' do
-    expect(described.attr_secure_adapter).to eq(AttrSecure::Adapters::Ruby)
+  describe "write attribute" do
+    it "should set the instance variable" do
+      described_class.write_attribute(subject, 'secure', 'hello')
+      expect(subject.instance_variable_get("@secure")).to eql('hello')
+    end
   end
 
-  it 'encrypts' do
-    secure_mock.should_receive(:encrypt).with('hello').and_return('encrypted')
-    subject.foo = 'hello'
-    expect(subject.instance_variable_get(:@foo)).to eq('encrypted')
-  end
-
-  it 'decrypts' do
-    secure_mock.should_receive(:encrypt).with('hello').and_return('encrypted')
-    subject.foo = 'hello'
-    secure_mock.should_receive(:decrypt).with('encrypted').and_return('decrypted')
-    expect(subject.foo).to eq('decrypted')
+  describe "read attribute" do
+    it "should read an instance variable" do
+      subject.instance_variable_set("@secure", 'world')
+      expect(described_class.read_attribute(subject, 'secure')).to eq('world')
+    end
   end
 end

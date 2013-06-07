@@ -1,5 +1,3 @@
-require 'attr_secure/secure'
-
 module AttrSecure
   module Adapters
     module ActiveRecord

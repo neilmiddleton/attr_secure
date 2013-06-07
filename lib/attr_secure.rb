@@ -1,13 +1,10 @@
 require "attr_secure/version"
-require 'fernet'
+require 'attr_secure/secure'
+require 'attr_secure/secret'
 
 require 'attr_secure/adapters/ruby'
 require 'attr_secure/adapters/active_record'
 require 'attr_secure/adapters/sequel'
-
-Fernet::Configuration.run do |config|
-  config.enforce_ttl = false
-end
 
 module AttrSecure
   #
@@ -20,19 +17,37 @@ module AttrSecure
     AttrSecure::Adapters::Ruby
   ]
 
-  def attr_secure(attribute, encryption_class = Secure.new)
+  # Generates attr_accessors that encrypt and decrypt attributes transparently
+  def attr_secure(*attributes)
+    options = {
+      :encryption_class => Secure,
+      :secret_class     => Secret,
+      :env              => ENV
+    }.merge!(attributes.last.is_a?(Hash) ? attributes.pop : {})
+
+    attribute = attributes.first
+
     define_method("#{attribute}=") do |value|
-      encrypted_value = encryption_class.encrypt(value.nil? ? nil : value)
-      self.class.attr_secure_adapter.write_attribute self, attribute, encrypted_value
+      adapter = self.class.attr_secure_adapter
+      secret  = options[:secret_class].new(options).call(self)
+      crypter = options[:encryption_class].new(secret)
+      value   = crypter.encrypt(value)
+
+      adapter.write_attribute self, attribute, value
     end
 
     define_method("#{attribute}") do
-      encrypted_value = self.class.attr_secure_adapter.read_attribute(self, attribute)
-      encryption_class.decrypt encrypted_value
+      adapter = self.class.attr_secure_adapter
+      secret  = options[:secret_class].new(options).call(self)
+      crypter = options[:encryption_class].new(secret)
+      value   = adapter.read_attribute(self, attribute)
+
+      crypter.decrypt value
     end
   end
 
   def attr_secure_adapter
     ADAPTERS.find {|a| a.valid?(self) }
   end
+
 end

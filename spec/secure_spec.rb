@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe AttrSecure::Secure do
-  subject     { described_class.new({'ATTR_SECURE_SECRET' => token}) }
-  let(:token) { 'fWSvpC6Eh1/FFE1TUgXpcEzMmmGc9IZSqoexzEslzKI=' }
+  subject      { described_class.new(secret) }
+  let(:secret) { 'fWSvpC6Eh1/FFE1TUgXpcEzMmmGc9IZSqoexzEslzKI=' }
 
   describe 'encrypt' do
     it "should encrypt a string" do

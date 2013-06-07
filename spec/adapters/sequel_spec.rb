@@ -1,30 +1,34 @@
 require 'spec_helper'
 
 describe AttrSecure::Adapters::Sequel do
-  let(:described)   { Class.new(Sequel::Model) }
-  subject           { described.new }
-  let(:secure_mock) { double(AttrSecure::Secure) }
+  let(:described) { Class.new(Sequel::Model) }
+  subject         { described.new }
 
   before do
     described.set_dataset(:fake_database)
-    described.extend(AttrSecure)
-    described.attr_secure :title, secure_mock
   end
 
-  it 'has sequel as it\'s adapter' do
-    expect(described.attr_secure_adapter).to eq(AttrSecure::Adapters::Sequel)
+  describe "valid?" do
+    it "should be valid" do
+      expect(described_class.valid?(described)).to be_true
+    end
+
+    it "should not be valid" do
+      expect(described_class.valid?(String)).to be_false
+    end
   end
 
-  it 'encrypts' do
-    secure_mock.should_receive(:encrypt).with('hello').and_return('encrypted')
-    subject.title = 'hello'
-    expect(subject.values[:title]).to eq('encrypted')
+  describe "write attribute" do
+    it "should write an attribute" do
+      described_class.write_attribute(subject, 'title', 'hello')
+      expect(subject.title).to eq('hello')
+    end
   end
 
-  it 'decrypts' do
-    secure_mock.should_receive(:encrypt).with('hello').and_return('encrypted')
-    subject.title = 'hello'
-    secure_mock.should_receive(:decrypt).with('encrypted').and_return('decrypted')
-    expect(subject.title).to eq('decrypted')
+  describe "read attribute" do
+    it "should read an instance variable" do
+      subject.title = 'world'
+      expect(described_class.read_attribute(subject, 'title')).to eq('world')
+    end
   end
 end

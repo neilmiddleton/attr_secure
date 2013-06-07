@@ -49,6 +49,16 @@ Then mark an attribute as secure:
 
 and read and write as normal (see above example)
 
+Alternatively you can set the secret on a per attribute basis:
+
+    attr_secure :my_attribute, :secret => "EKq88AMFeRLqEx5knUcoJ4LOnrv52d7hfAFgEKMoDKzqNei4m7kbu"
+
+And with a lambda :
+
+    attr_secure :my_attribute, :secret => lambda {|object| object.user.secret }
+
+It is a good idea to not hard code secrets ;)
+
 Note: You will want to set your table columns for encrypted values to :text or
 similar.  Encrypted values are long.
 
