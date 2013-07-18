@@ -6,8 +6,8 @@ describe AttrSecure do
     let(:described)   { Class.new }
     let(:secure_mock) { double(AttrSecure::Secure) }
     let(:secret_mock) { double(AttrSecure::Secret) }
-    let(:crypter)     { mock(:secure_crypter) }
-    let(:adapter)     { mock(:adapter) }
+    let(:crypter)     { double(:secure_crypter) }
+    let(:adapter)     { double(:adapter) }
 
     before do
       described.extend(AttrSecure)
