@@ -3,7 +3,9 @@ module AttrSecure
     module Sequel
 
       def self.valid?(object)
-        object.respond_to?(:<) && defined?(Sequel) && object < ::Sequel::Model
+        object.respond_to?(:<) && object < ::Sequel::Model
+      rescue NameError
+        false
       end
 
       def self.write_attribute(object, attribute, value)

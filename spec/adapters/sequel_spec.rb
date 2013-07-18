@@ -16,6 +16,11 @@ describe AttrSecure::Adapters::Sequel do
     it "should not be valid" do
       expect(described_class.valid?(String)).to be_false
     end
+
+    it "should not be valid if sequel is not loaded" do
+      hide_const('Sequel')
+      expect(described_class.valid?(described)).to be_false
+    end
   end
 
   describe "write attribute" do

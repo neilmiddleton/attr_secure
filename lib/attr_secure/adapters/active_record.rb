@@ -3,7 +3,9 @@ module AttrSecure
     module ActiveRecord
 
       def self.valid?(object)
-        object.respond_to?(:<) && defined?(ActiveRecord) && object < ::ActiveRecord::Base
+        object.respond_to?(:<) && object < ::ActiveRecord::Base
+      rescue NameError
+        false
       end
 
       def self.write_attribute(object, attribute, value)
