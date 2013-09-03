@@ -58,6 +58,25 @@ Remember kids, it's not a good idea to hard-code secrets.
 Note: You will want to set your table columns for encrypted values to :text or
 similar.  Encrypted values are long.
 
+## Migration to Fernet 2.0
+
+The master branch relies on Fernet 2.0.rc. If you were using previous versions, you need to migrate your encrypted data since the encryption method has changed.  
+We provide `AttrSecure::Secure#old_encrypt` and `AttrSecure::Secure#old_decrypt` to facilitate writing migration scripts.
+
+Here is a migration example.
+
+    class Report < ActiveRecord::Base
+      attr_secure :secret_value
+    end
+
+    secure = AttrSecure::Secure.new(ENV['ATTR_SECURE_SECRET'])
+    Report.all.each do |report|
+      report.secret_value = secure.old_decrypt(report.attributes['secret_value'])
+      report.save!
+    end
+
+This will decrypt the value using the older decryption process, encrypt it with the new encryption process and save the new value into the object.
+
 ## Contributing
 
 1. Fork it

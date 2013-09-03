@@ -1,4 +1,5 @@
 require 'fernet'
+require 'old_fernet'
 
 Fernet::Configuration.run do |config|
   config.enforce_ttl = false
@@ -20,6 +21,18 @@ module AttrSecure
       return nil if value.nil?
       verifier = Fernet.verifier(secret, value)
       verifier.message if verifier.valid?
+    end
+
+    def old_encrypt(value)
+      OldFernet.generate(secret) do |generator|
+        generator.data = { value: value }
+      end
+    end
+
+    def old_decrypt(value)
+      return nil if value.nil?
+      verifier = OldFernet.verifier(secret, value)
+      verifier.data['value'] if verifier.valid?
     end
   end
 end
