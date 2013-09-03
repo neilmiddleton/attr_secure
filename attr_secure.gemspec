@@ -25,4 +25,12 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "sqlite3"
 
   spec.add_dependency 'fernet', '~> 2.0.rc1'
+
+  # Support for fernet 1.6 migration
+  spec.add_dependency "yajl-ruby"
+  spec.add_dependency "multi_json"
+
+  spec.post_install_message = "If you're upgrading attr_secure from 0.2.1 or below, the encryption method provided by Fernet has changed.
+  You need to migrate your encrypted data to the new system.
+  See more in our README: https://github.com/neilmiddleton/attr_secure#migration-to-fernet-20"
 end
