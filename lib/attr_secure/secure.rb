@@ -25,7 +25,7 @@ module AttrSecure
     def decrypt(value)
       return nil if value.nil?
       [secret].flatten.each do |_secret|
-        data = Fernet.verifier(_secret, value)
+        verifier = Fernet.verifier(_secret, value)
         return verifier.data['value'] if verifier.valid?
       end
     end
