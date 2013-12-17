@@ -9,19 +9,26 @@ module AttrSecure
     attr_reader :secret
 
     def initialize(secret)
-      @secret = secret
+      @secret = secret.split(",")
+    end
+
+    def secret=(val)
+      @secret = secret.split(",")
     end
 
     def encrypt(value)
-      Fernet.generate(secret) do |generator|
+      Fernet.generate([secret].flatten.first) do |generator|
         generator.data = { value: value }
       end
     end
 
     def decrypt(value)
       return nil if value.nil?
-      verifier = Fernet.verifier(secret, value)
-      verifier.data['value'] if verifier.valid?
+      [secret].flatten.each do |_secret|
+        data = Fernet.verifier(_secret, value)
+        return verifier.data['value'] if verifier.valid?
+      end
     end
+
   end
 end
