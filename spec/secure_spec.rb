@@ -3,8 +3,17 @@ require 'spec_helper'
 describe AttrSecure::Secure do
   context "with a simple key" do
 
-    subject      { described_class.new(secret) }
-    let(:secret) { 'fWSvpC6Eh1/FFE1TUgXpcEzMmmGc9IZSqoexzEslzKI=' }
+    subject       { described_class.new(secret1) }
+    let(:secret1) { 'fWSvpC6Eh1/FFE1TUgXpcEzMmmGc9IZSqoexzEslzKI=' }
+    let(:secret2) { 'd9ssNmUYn7UpMoSc0eM2glVUG2DPYwXveLTDU7j8pBY=' }
+
+    describe '#secret=' do
+      it "should update the list of secrets" do
+        expect(subject.secret).to eq([secret1])
+        subject.secret = secret2
+        expect(subject.secret).to eq([secret2])
+      end
+    end
 
     describe '#encrypt' do
       it "should encrypt a string" do
