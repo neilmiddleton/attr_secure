@@ -13,7 +13,7 @@ module AttrSecure
     end
 
     def secret=(val)
-      @secret = secret.split(",")
+      @secret = val.split(",")
     end
 
     def encrypt(value)
