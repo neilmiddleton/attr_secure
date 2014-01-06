@@ -9,11 +9,15 @@ module AttrSecure
     attr_reader :secret
 
     def initialize(secret)
-      @secret = secret.split(",")
+      self.secret = secret
     end
 
     def secret=(val)
-      @secret = secret.split(",")
+      @secret = if val.is_a? Array
+                  val
+                else
+                  val.split(",")
+                end
     end
 
     def encrypt(value)
