@@ -60,7 +60,7 @@ similar.  Encrypted values are long.
 
 ## Key rotation
 
-You can pass a comma delimited list of keys as your secret.  attr_secure will decrypt with each key in turn until it hits a verified value.  Encryption always happens with the newest (leftmost) key.
+You can pass a comma delimited list of keys (or an array of keys) as your secret.  attr_secure will decrypt with each key in turn until it hits a verified value.  Encryption always happens with the newest (leftmost) key.
 
 ## Contributing
 
