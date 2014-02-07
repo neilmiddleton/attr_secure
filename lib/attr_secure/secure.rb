@@ -34,8 +34,8 @@ module AttrSecure
           return verifier.data['value'] if verifier.valid?
         rescue
         end
-        raise OpenSSL::Cipher::CipherError
       end
+      raise OpenSSL::Cipher::CipherError
     end
 
   end
