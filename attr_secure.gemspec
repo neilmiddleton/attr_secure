@@ -24,5 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "sequel"
   spec.add_development_dependency "sqlite3"
 
-  spec.add_dependency 'fernet', '<= 2.0rc2'
+  spec.add_dependency 'fernet', '< 3.0'
 end
