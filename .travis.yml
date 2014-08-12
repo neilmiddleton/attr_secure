@@ -4,6 +4,10 @@ rvm:
   - 2.0.0
   - jruby-19mode
 
+gemfile:
+  - Gemfile
+  - gemfiles/Gemfile.fernet_1.6
+
 matrix:
   allow_failures:
     - rvm: jruby-19mode
