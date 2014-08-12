@@ -1,11 +1,17 @@
 require 'fernet'
 
-Fernet::Configuration.run do |config|
-  config.enforce_ttl = false
+case Fernet::VERSION
+  when /^2\.0/
+    require 'attr_secure/fernet/2'
+  when /^1\.6/
+    require 'attr_secure/fernet/1'
+  else
+    raise "Invalid fernet version provided #{Fernet::VERSION}"
 end
 
 module AttrSecure
   class Secure
+    include AttrSecure::Fernet
     attr_reader :secret
 
     def initialize(secret)
@@ -19,24 +25,5 @@ module AttrSecure
                   val.split(",")
                 end
     end
-
-    def encrypt(value)
-      Fernet.generate([secret].flatten.first) do |generator|
-        generator.data = { value: value }
-      end
-    end
-
-    def decrypt(value)
-      return nil if value.nil?
-      [secret].flatten.each do |_secret|
-        begin
-          verifier = Fernet.verifier(_secret, value)
-          return verifier.data['value'] if verifier.valid?
-        rescue
-        end
-      end
-      raise OpenSSL::Cipher::CipherError
-    end
-
   end
 end
