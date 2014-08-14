@@ -1,7 +1,7 @@
 require 'fernet'
 
 case Fernet::VERSION
-  when /^2\.0/
+  when /^2/
     require 'attr_secure/fernet/2'
   when /^1\.6/
     require 'attr_secure/fernet/1'
