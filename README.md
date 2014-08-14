@@ -62,6 +62,14 @@ similar.  Encrypted values are long.
 
 You can pass a comma delimited list of keys (or an array of keys) as your secret.  attr_secure will decrypt with each key in turn until it hits a verified value.  Encryption always happens with the newest (leftmost) key.
 
+## Fernet version
+
+Attr Secure supports both Fernet 1.6 and 2.0. By default, the latest version will be used.  
+If you wish to use the 1.6 releases, you need to specify so in your own Gemfile with the following:
+
+    gem 'attr_secure'
+    gem 'fernet', '~> 1.6'
+
 ## Contributing
 
 1. Fork it
