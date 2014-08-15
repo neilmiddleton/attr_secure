@@ -16,23 +16,48 @@ describe AttrSecure do
         secret_class:     secret_mock
 
       secret_mock.stub_chain(:new, :call).and_return('secret token')
-      secure_mock.should_receive(:new).with('secret token').and_return(crypter)
       described.stub(:attr_secure_adapter).and_return(adapter)
     end
 
     describe "set the attribute" do
       it "should set the attribute encrypted" do
+        secure_mock.should_receive(:new).with('secret token').and_return(crypter)
         crypter.should_receive(:encrypt).with('decrypted').and_return('encrypted')
         adapter.should_receive(:write_attribute).with(subject, :foo, 'encrypted')
         subject.foo = 'decrypted'
+      end
+
+      it "should set nil attributes as nil" do
+        crypter.should_not_receive(:encrypt).with(nil)
+        adapter.should_receive(:write_attribute).with(subject, :foo, nil)
+        subject.foo = nil
+      end
+
+      it "should set empty attributes as empty" do
+        crypter.should_not_receive(:encrypt).with('')
+        adapter.should_receive(:write_attribute).with(subject, :foo, '')
+        subject.foo = ''
       end
     end
 
     describe "read the attribute" do
       it "should read an encrypted attribute" do
+        secure_mock.should_receive(:new).with('secret token').and_return(crypter)
         adapter.should_receive(:read_attribute).with(subject, :foo).and_return('encrypted')
         crypter.should_receive(:decrypt).with('encrypted').and_return('decrypted')
         expect(subject.foo).to eq('decrypted')
+      end
+
+      it "should read nil attributes as nil" do
+        adapter.should_receive(:read_attribute).with(subject, :foo).and_return(nil)
+        crypter.should_not_receive(:decrypt).with(nil)
+        expect(subject.foo).to be_nil
+      end
+
+      it "should set empty attributes as empty" do
+        adapter.should_receive(:read_attribute).with(subject, :foo).and_return('')
+        crypter.should_not_receive(:decrypt).with('')
+        expect(subject.foo).to be_empty
       end
     end
   end
