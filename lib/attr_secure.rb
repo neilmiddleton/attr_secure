@@ -29,20 +29,26 @@ module AttrSecure
 
     define_method("#{attribute}=") do |value|
       adapter = self.class.attr_secure_adapter
-      secret  = options[:secret_class].new(options).call(self)
-      crypter = options[:encryption_class].new(secret)
-      value   = crypter.encrypt(value)
+
+      unless value.nil? || value.empty?
+        secret  = options[:secret_class].new(options).call(self)
+        crypter = options[:encryption_class].new(secret)
+        value   = crypter.encrypt(value)
+      end
 
       adapter.write_attribute self, attribute, value
     end
 
     define_method("#{attribute}") do
       adapter = self.class.attr_secure_adapter
-      secret  = options[:secret_class].new(options).call(self)
-      crypter = options[:encryption_class].new(secret)
-      value   = adapter.read_attribute(self, attribute)
+      value = adapter.read_attribute(self, attribute)
 
-      crypter.decrypt value
+      unless value.nil? || value.empty?
+        secret  = options[:secret_class].new(options).call(self)
+        crypter = options[:encryption_class].new(secret)
+        value   = crypter.decrypt value
+      end
+      value
     end
   end
 
